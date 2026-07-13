@@ -3,6 +3,9 @@ import torch
 import json
 from fastapi import FastAPI
 from pydantic import BaseModel
+from huggingface_hub import hf_hub_download
+
+checkpoint_path = hf_hub_download(repo_id="Lyncan/ChessGPT", filename="checkpoint_epoch_15.pt")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 with open('token_to_id', 'r') as file:
@@ -13,7 +16,7 @@ with open('id_to_token', 'r') as file:
     id_to_token = json.load(file)
 
 model = ChessGPT(vocab_size=len(token_to_id), d_model=512, n_heads=8, d_ff=2048, n_layers=10, max_seq_len=250).to(device)
-model.load_state_dict(torch.load('checkpoint_epoch_15.pt', map_location=device))
+model.load_state_dict(torch.load(checkpoint_path, map_location=device))
 
 class PredictionRequest(BaseModel):
     tokens: list[str]

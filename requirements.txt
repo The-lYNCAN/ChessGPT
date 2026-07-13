@@ -4,3 +4,4 @@ uvicorn
 python-chess
 pandas
 numpy
+huggingface_hub
